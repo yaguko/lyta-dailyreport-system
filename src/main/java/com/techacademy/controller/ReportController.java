@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 
-import com.techacademy.entity.Employee;
-import com.techacademy.service.EmployeeService;
+import com.techacademy.entity.Report;
+import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
 
 @Controller
 @RequestMapping("reports")
 public class ReportController {
 
-    private final EmployeeService reportService;
+    private final ReportService reportService;
 
     @Autowired
-    public  ReportController( EmployeeService reportService) {
+    public ReportController( ReportService reportService) {
         this.reportService = reportService;
     }
 
@@ -36,117 +36,95 @@ public class ReportController {
     public String list(Model model) {
 
         model.addAttribute("listSize", reportService.findAll().size());
-        model.addAttribute("employeeList", reportService.findAll());
+        model.addAttribute("reportList", reportService.findAll());
 
         return "reports/list";
     }
 
-    // 従業員詳細画面
-    @GetMapping(value = "/{code}/")
-    public String detail(@PathVariable String code, Model model) {
+    // 日報詳細画面
+    @GetMapping(value = "/{id}/")
+    public String detail(@PathVariable Integer id, Model model) {
 
-        model.addAttribute("employee", employeeService.findByCode(code));
-        return "employees/detail";
+        model.addAttribute("report", reportService.findById(id));
+        return "reports/detail";
     }
 
-    // 従業員新規登録画面
+    // 日報新規登録画面
     @GetMapping(value = "/add")
-    public String create(@ModelAttribute Employee employee) {
+    public String create(@ModelAttribute Report report) {
 
-        return "employees/new";
+        return "reports/new";
     }
 
-    // 従業員新規登録処理
+    // 日報新規登録処理
     @PostMapping(value = "/add")
-    public String add(@Validated Employee employee, BindingResult res, Model model) {
-
-        // パスワード空白チェック
-        /*
-         * エンティティ側の入力チェックでも実装は行えるが、更新の方でパスワードが空白でもチェックエラーを出さずに
-         * 更新出来る仕様となっているため上記を考慮した場合に別でエラーメッセージを出す方法が簡単だと判断
-         */
-        if ("".equals(employee.getPassword())) {
-            // パスワードが空白だった場合
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
-
-            return create(employee);
-
-        }
+    public String add(@Validated Report report, BindingResult res, Model model) {
 
         // 入力チェック
         if (res.hasErrors()) {
-            return create(employee);
+            return create(report);
         }
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
-            ErrorKinds result = employeeService.save(employee);
+            ErrorKinds result = reportService.save(report);
 
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return create(employee);
+                return create(report);
             }
 
         } catch (DataIntegrityViolationException e) {
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return create(employee);
+            return create(report);
         }
 
-        return "redirect:/employees";
+        return "redirect:/reports";
     }
 
     // 従業員削除処理
-    @PostMapping(value = "/{code}/delete")
-    public String delete(@PathVariable String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @PostMapping(value = "/{id}/delete")
+    public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = employeeService.delete(code, userDetail);
+        ErrorKinds result = reportService.delete(id, userDetail);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-            model.addAttribute("employee", employeeService.findByCode(code));
-            return detail(code, model);
+            model.addAttribute("report", reportService.findById(id));
+            return detail(id, model);
         }
 
-        return "redirect:/employees";
+        return "redirect:/reports";
     }
 
      // <追記>従業員更新画面の表示
-    @PostMapping("/{code}/update")
-    public String getUser(@PathVariable("code") String code, Model model) {
-        // Modelに登録,codeがnullか否かをifで分ける
-        if(code == null) {
-        model.addAttribute("employee");
+    @PostMapping("/{id}/update")
+    public String getUser(@PathVariable("id") Integer id, Model model) {
+        // Modelに登録,idがnullか否かをifで分ける
+        if(id == null) {
+        model.addAttribute("report");
         }
-        if(code != null) {
-        model.addAttribute("employee", employeeService.findByCode(code));}
+        if(id != null) {
+        model.addAttribute("report", reportService.findById(id));}
 
         // 従業員更新画面に遷移
-        return "employees/update";
+        return "reports/update";
     }
 
  // <追記２>従業員更新処理
     @PostMapping("/update")
-    public String postUser(@Validated Employee employee, BindingResult res, Integer code, Model model) { // 引数codeを追加
+    public String postUser(@Validated Report report, BindingResult res, Integer id, Model model) { // 引数idを追加
         if (res.hasErrors()) {
             // エラーあり
-            code = null; // codeにnullを設定
-            return create(employee); //return　getUser(code, model);から書き換え
+            id = null; // idにnullを設定
+            return create(report); //return　getUser(code, model);から書き換え
         }
         // User登録
-        employeeService.save(employee);
+        reportService.save(report);
         // 一覧画面にリダイレクト
-        return "redirect:/employees";  //更新→一覧への遷移
+        return "redirect:/reports";  //更新→一覧への遷移
     }
-
-
-
-
-
-
-
-
 
 }

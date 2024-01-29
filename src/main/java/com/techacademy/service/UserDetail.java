@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 
 public class UserDetail implements UserDetails {
     private static final long serialVersionUID = 1L;

@@ -66,6 +66,16 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.techacademy</groupId>
+			<artifactId>KadaiFirstSpringBoot</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.techacademy</groupId>
+			<artifactId>TutorialDevelop-1</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
