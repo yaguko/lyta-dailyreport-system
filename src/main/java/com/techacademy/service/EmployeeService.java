@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeService {
@@ -68,8 +68,11 @@ public class EmployeeService {
 
         /* 削除対象の従業員に紐づいている日報情報の削除：ここから */
 
+        ReportService reportservice = new ReportService();
         // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
         List<Report> reportList = reportService.findByEmployee(employee);
+
+
 
         // 日報のリスト（reportList）を拡張for文を使って繰り返し
         for (Report report : reportList) {
@@ -132,5 +135,7 @@ public class EmployeeService {
         int passwordLength = employee.getPassword().length();
         return passwordLength < 8 || 16 < passwordLength;
     }
+
+
 
 }

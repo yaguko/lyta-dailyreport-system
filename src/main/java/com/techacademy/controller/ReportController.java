@@ -27,7 +27,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @Autowired
-    public ReportController( ReportService reportService) {
+    public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
 
@@ -99,32 +99,33 @@ public class ReportController {
         return "redirect:/reports";
     }
 
-     // <追記>従業員更新画面の表示
-    @PostMapping("/{id}/update")
+    // <追記>日報更新画面の表示
+    @GetMapping("/{id}/update")
     public String getUser(@PathVariable("id") Integer id, Model model) {
         // Modelに登録,idがnullか否かをifで分ける
-        if(id == null) {
-        model.addAttribute("report");
+        if (id == null) {
+            model.addAttribute("report");
         }
-        if(id != null) {
-        model.addAttribute("report", reportService.findById(id));}
+        if (id != null) {
+            model.addAttribute("report", reportService.findById(id));
+        }
 
         // 従業員更新画面に遷移
         return "reports/update";
     }
 
- // <追記２>従業員更新処理
+    // <追記２>従業員更新処理
     @PostMapping("/update")
     public String postUser(@Validated Report report, BindingResult res, Integer id, Model model) { // 引数idを追加
         if (res.hasErrors()) {
             // エラーあり
             id = null; // idにnullを設定
-            return create(report); //return　getUser(code, model);から書き換え
+            return create(report); // return getUser(code, model);から書き換え
         }
         // User登録
         reportService.save(report);
         // 一覧画面にリダイレクト
-        return "redirect:/reports";  //更新→一覧への遷移
+        return "redirect:/reports"; // 更新→一覧への遷移
     }
 
 }

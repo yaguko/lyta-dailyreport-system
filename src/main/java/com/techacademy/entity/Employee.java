@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "")
+@Table(name = "employee")
 @SQLRestriction("delete_flg = false")
 public class Employee {
 
