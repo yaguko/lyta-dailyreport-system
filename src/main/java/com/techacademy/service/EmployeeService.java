@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
-import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
 
 @Service
@@ -21,11 +20,14 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReportService reportService;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, ReportService reportService) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reportService = reportService;
+
     }
 
     // 従業員保存
@@ -61,6 +63,7 @@ public class EmployeeService {
         if (code.equals(userDetail.getEmployee().getCode())) {
             return ErrorKinds.LOGINCHECK_ERROR;
         }
+        
         Employee employee = findByCode(code);
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
@@ -68,11 +71,10 @@ public class EmployeeService {
 
         /* 削除対象の従業員に紐づいている日報情報の削除：ここから */
 
-        ReportService reportservice = new ReportService();
+        /* ReportService reportservice = new ReportService();　←不要？
+
         // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
         List<Report> reportList = reportService.findByEmployee(employee);
-
-
 
         // 日報のリスト（reportList）を拡張for文を使って繰り返し
         for (Report report : reportList) {

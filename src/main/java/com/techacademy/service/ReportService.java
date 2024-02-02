@@ -4,15 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReportService {
@@ -24,7 +27,9 @@ public class ReportService {
     public ReportService(ReportRepository reportRepository, PasswordEncoder passwordEncoder) {
         this.reportRepository = reportRepository;
         this.passwordEncoder = passwordEncoder;
+
     }
+    
 
      // 日報保存
     @Transactional
@@ -50,6 +55,20 @@ public class ReportService {
         return null;
     }
 
+    // 日報削除
+
+    @Transactional
+    public ErrorKinds delete(Integer id, UserDetail userDetail) {
+        Report report = findById(id);
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
+    }
+
+
+
 
     // 日報一覧表示処理
     public List<Report> findAll() {
@@ -65,18 +84,5 @@ public class ReportService {
         return report;
     }
 
-    // 日報削除
-
-    @Transactional
-    public ErrorKinds delete(Integer id, UserDetail userDetail) {
-        Report report = findById(id);
-        LocalDateTime now = LocalDateTime.now();
-        report.setUpdatedAt(now);
-        report.setDeleteFlg(true);
-
-        return ErrorKinds.SUCCESS;
-    }
-
-
-
+ 
 }
