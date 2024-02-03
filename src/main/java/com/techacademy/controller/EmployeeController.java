@@ -114,7 +114,7 @@ public class EmployeeController {
     }
 
      // <追記>従業員更新画面の表示
-    @PostMapping("/{code}/update")
+    @GetMapping("/{code}/update")
     public String getUser(@PathVariable("code") String code, Model model) {
         // Modelに登録,codeがnullか否かをifで分ける
         if(code == null) {
@@ -128,12 +128,12 @@ public class EmployeeController {
     }
 
  // <追記２>従業員更新処理
-    @PostMapping("/update")
+    @PostMapping("/{code}/update")
     public String postUser(@Validated Employee employee, BindingResult res, Integer code, Model model) { // 引数codeを追加
         if (res.hasErrors()) {
             // エラーあり
             code = null; // codeにnullを設定
-            return create(employee); //return　getUser(code, model);から書き換え
+            return "employees/update"; //return　getUser(code, model);から書き換え
         }
         // User登録
         employeeService.save(employee);

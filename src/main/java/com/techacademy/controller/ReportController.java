@@ -65,7 +65,7 @@ public class ReportController {
             return create(report);
         }
 
-        // 論理削除を行った日報番号を指定すると例外となるためtry~catchで対応
+        // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
             ErrorKinds result = reportService.save(report);
@@ -84,7 +84,7 @@ public class ReportController {
         return "redirect:/reports";
     }
 
-    // 日報削除処理
+    // 従業員削除処理
     @PostMapping(value = "/{id}/delete")
     public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
@@ -110,11 +110,11 @@ public class ReportController {
             model.addAttribute("report", reportService.findById(id));
         }
 
-        // 日報更新画面に遷移
+        // 日報画面に遷移
         return "reports/update";
     }
 
-    // <追記２>日報更新処理
+    // <追記２>従業員更新処理
     @PostMapping("/update")
     public String postUser(@Validated Report report, BindingResult res, Integer id, Model model) { // 引数idを追加
         if (res.hasErrors()) {

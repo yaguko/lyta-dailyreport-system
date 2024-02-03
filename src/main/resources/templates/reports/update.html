@@ -47,7 +47,7 @@
                                     <label class="form-label" for="content">内容</label>
                                     <p class="mb-1"></p>
                                     <div class="col-md-7">
-                                        <input type="text" th:field="*{content}" th:errorclass="err">
+                                        <textarea type="text" th:field="*{content}" th:errorclass="err" cols="50" rows="5"></textarea>
                                         <span th:errors="*{content}" class="err"></span>
                                     </div>
                                     </div>
