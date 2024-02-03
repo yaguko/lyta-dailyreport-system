@@ -29,7 +29,7 @@ public class ReportService {
         this.passwordEncoder = passwordEncoder;
 
     }
-    
+
 
      // 日報保存
     @Transactional
@@ -82,5 +82,5 @@ public class ReportService {
         return report;
     }
 
- 
+
 }

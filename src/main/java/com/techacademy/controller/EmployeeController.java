@@ -132,7 +132,7 @@ public class EmployeeController {
     public String postUser(@Validated Employee employee, BindingResult res, Integer code, Model model) { // 引数codeを追加
         if (res.hasErrors()) {
             // エラーあり
-            code = null; // codeにnullを設定
+            // ★2/3に   code = null; // codeにnullを設定 　を削除
             return "employees/update"; //return　getUser(code, model);から書き換え
         }
         // User登録

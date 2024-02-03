@@ -100,7 +100,7 @@ public class ReportController {
     }
 
     // <追記>日報更新画面の表示
-    @GetMapping("/{id}/update")
+    @GetMapping(value = "/{id}/update")
     public String getUser(@PathVariable("id") Integer id, Model model) {
         // Modelに登録,idがnullか否かをifで分ける
         if (id == null) {
@@ -115,7 +115,7 @@ public class ReportController {
     }
 
     // <追記２>従業員更新処理
-    @PostMapping("/update")
+    @PostMapping(value = "/{id}/update")
     public String postUser(@Validated Report report, BindingResult res, Integer id, Model model) { // 引数idを追加
         if (res.hasErrors()) {
             // エラーあり
