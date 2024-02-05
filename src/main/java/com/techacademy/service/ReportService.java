@@ -82,5 +82,12 @@ public class ReportService {
         return report;
     }
 
+    /** 日報の登録を行なう */
+    @Transactional
+    public Report saveReport(Report report) {
+        return reportRepository.save(report);
+    }
+
+
 
 }

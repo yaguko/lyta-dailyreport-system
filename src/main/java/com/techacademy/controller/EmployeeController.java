@@ -115,7 +115,8 @@ public class EmployeeController {
 
      // <追記>従業員更新画面の表示
     @GetMapping("/{code}/update")
-    public String getUser(@PathVariable("code") String code, Model model) {
+    public String update(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
         // Modelに登録,codeがnullか否かをifで分ける
         if(code == null) {
         model.addAttribute("employee");
@@ -129,24 +130,22 @@ public class EmployeeController {
 
  // <追記２>従業員更新処理
     @PostMapping("/{code}/update")
-    public String postUser(@Validated Employee employee, BindingResult res, Integer code, Model model) { // 引数codeを追加
+    public String update(@Validated Employee employee, BindingResult res, String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         if (res.hasErrors()) {
-            // エラーあり
-            // ★2/3に   code = null; // codeにnullを設定 　を削除
+            code = null;
             return "employees/update"; //return　getUser(code, model);から書き換え
         }
-        // User登録
-        employeeService.save(employee);
+        // User更新情報登録
+
+        Employee newEmployee = employeeService.findByCode(code);
+        newEmployee.setCode(employee.getCode());
+        newEmployee.setName(employee.getName());
+        newEmployee.setRole(employee.getRole());
+        newEmployee.setPassword(employee.getPassword());
+        employeeService.save(newEmployee);
         // 一覧画面にリダイレクト
         return "redirect:/employees";  //更新→一覧への遷移
     }
-
-
-
-
-
-
-
 
 
 }

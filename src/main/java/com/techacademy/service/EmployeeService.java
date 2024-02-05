@@ -63,7 +63,7 @@ public class EmployeeService {
         if (code.equals(userDetail.getEmployee().getCode())) {
             return ErrorKinds.LOGINCHECK_ERROR;
         }
-        
+
         Employee employee = findByCode(code);
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
@@ -138,6 +138,17 @@ public class EmployeeService {
         return passwordLength < 8 || 16 < passwordLength;
     }
 
+    /** Userの登録を行なう */
+    @Transactional
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    /* User情報更新を行なう
+
+    @Transactional
+    public void save(UserDetail userDetail) {
+    Employee employee = (findByCode(employee.getCode()));  */
 
 
 }

@@ -1,5 +1,7 @@
 package com.techacademy.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,18 +53,21 @@ public class ReportController {
 
     // 日報新規登録画面
     @GetMapping(value = "/add")
-    public String create(@ModelAttribute Report report) {
+    public String create(Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    report=new Report();
+    report.setEmployee(userDetail.getEmployee());
+        model.addAttribute("report",report);
 
-        return "reports/new";
-    }
+        return "reports/new";}
+
 
     // 日報新規登録処理
     @PostMapping(value = "/add")
-    public String add(@Validated Report report, BindingResult res, Model model) {
+    public String add(@Validated Report report, BindingResult res, UserDetail userDetail, Model model) {
 
         // 入力チェック
         if (res.hasErrors()) {
-            return create(report);
+            return create(report, userDetail, model);
         }
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
@@ -72,19 +77,19 @@ public class ReportController {
 
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return create(report);
+                return create(report, userDetail, model);
             }
 
         } catch (DataIntegrityViolationException e) {
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return create(report);
+            return create(report, userDetail, model);
         }
 
         return "redirect:/reports";
     }
 
-    // 従業員削除処理
+    // 日報削除処理
     @PostMapping(value = "/{id}/delete")
     public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
@@ -101,7 +106,7 @@ public class ReportController {
 
     // <追記>日報更新画面の表示
     @GetMapping(value = "/{id}/update")
-    public String getUser(@PathVariable("id") Integer id, Model model) {
+    public String getUser(@PathVariable("id") Integer id, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         // Modelに登録,idがnullか否かをifで分ける
         if (id == null) {
             model.addAttribute("report");
@@ -110,19 +115,25 @@ public class ReportController {
             model.addAttribute("report", reportService.findById(id));
         }
 
-        // 日報画面に遷移
+        // 日報更新画面に遷移
         return "reports/update";
     }
 
-    // <追記２>従業員更新処理
+    // <追記２>日報更新処理
     @PostMapping(value = "/{id}/update")
-    public String postUser(@Validated Report report, BindingResult res, Integer id, Model model) { // 引数idを追加
+    public String update(@Validated Report report, BindingResult res,  Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
         if (res.hasErrors()) {
             // エラーあり
             id = null; // idにnullを設定
-            return create(report); // return getUser(code, model);から書き換え
+            return "reports/update"; // return getUser(code, model);から書き換え
         }
-        // User登録
+        // 日報更新情報登録
+        Report newReport = reportService.findById(id);
+        newReport.setReportDate(report.getReportDate());
+        newReport.setTitle(report.getTitle());
+        newReport.setContent(report.getContent());
+
+
         reportService.save(report);
         // 一覧画面にリダイレクト
         return "redirect:/reports"; // 更新→一覧への遷移

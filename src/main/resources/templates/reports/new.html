@@ -32,12 +32,11 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-
-                                        <label class="form-label" for="name">氏名</label>
+                                        <label class="form-label" for="employee.name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input type="text" th:field="*{employee.name}" th:errorclass="err">
-                                            <span th:errors="*{employee.name}" class="err"></span>
+                                            <input type="hidden" id="id" name="employee.name" th:value="*{employee.name}" th:text="*{employee.name}">
+                                        </div>
                                         </div>
                                         <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>

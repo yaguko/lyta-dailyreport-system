@@ -67,4 +67,6 @@ public class UserDetail implements UserDetails {
         // 従業員が有効であればtrueを返す
         return true;
     }
+
+
 }
