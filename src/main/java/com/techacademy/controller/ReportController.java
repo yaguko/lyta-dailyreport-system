@@ -1,7 +1,6 @@
 package com.techacademy.controller;
 
 import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -63,7 +62,7 @@ public class ReportController {
 
     // 日報新規登録処理
     @PostMapping(value = "/add")
-    public String add(@Validated Report report, BindingResult res, UserDetail userDetail, Model model) {
+    public String add(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
         // 入力チェック
         if (res.hasErrors()) {
@@ -132,7 +131,6 @@ public class ReportController {
         newReport.setReportDate(report.getReportDate());
         newReport.setTitle(report.getTitle());
         newReport.setContent(report.getContent());
-
 
         reportService.save(report);
         // 一覧画面にリダイレクト

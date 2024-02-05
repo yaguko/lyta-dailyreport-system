@@ -51,7 +51,7 @@ public class EmployeeController {
 
     // 従業員新規登録画面
     @GetMapping(value = "/add")
-    public String create(@ModelAttribute Employee employee) {
+    public String create(Employee employee) {
 
         return "employees/new";
     }
