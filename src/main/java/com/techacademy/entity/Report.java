@@ -20,7 +20,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
 @Data
 @Entity
 @Table(name = "reports")
@@ -59,13 +58,13 @@ public class Report {
     private String title;
 
     // 内容
-    @Column(columnDefinition="LONGTEXT", length = 600, nullable = false)
+    @Column(columnDefinition = "LONGTEXT", length = 600, nullable = false)
     @NotEmpty
     @Length(max = 600)
     private String content;
 
     // 削除フラグ(論理削除を行うため)
-    @Column(columnDefinition="TINYINT", nullable = false)
+    @Column(columnDefinition = "TINYINT", nullable = false)
     private boolean deleteFlg;
 
     // 登録日時

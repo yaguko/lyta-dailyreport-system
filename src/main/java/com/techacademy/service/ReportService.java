@@ -10,23 +10,25 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
-import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
+import com.techacademy.repository.EmployeeRepository;
 import com.techacademy.repository.ReportRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReportService {
 
     private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
+    // private final EmployeeService employeeService; //追記
 
     @Autowired
     public ReportService(ReportRepository reportRepository, PasswordEncoder passwordEncoder) {
         this.reportRepository = reportRepository;
         this.passwordEncoder = passwordEncoder;
+        // this.employeeService = employeeService; //追記
 
     }
 
