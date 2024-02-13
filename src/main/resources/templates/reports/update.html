@@ -26,8 +26,7 @@
                                             <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="err">
                                            <span th:errors="*{reportDate}" class="date-danger"></span>
                                             <span th:if="${reportDateError} neq null" th:date="${reportDateError}" class="date-danger"></span>
-                                </div>
-                            </div>
+                                    </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="employee.name">氏名</label>
                                         <p class="mb-1"></p>

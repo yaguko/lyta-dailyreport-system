@@ -114,8 +114,8 @@ public class ReportController {
 
     // <追記>日報更新画面の表示
     @GetMapping(value = "/{id}/update")
-    public String getUser(@PathVariable("id") Integer id, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-
+    public String update(@PathVariable("id") Integer id, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+     //           ↑getUserから書き換え
         // Modelに登録,idがnullか否かをifで分ける
         if (id == null) {
             model.addAttribute("report");
@@ -129,19 +129,16 @@ public class ReportController {
     }
 
     // <追記２>日報更新処理
-    @PostMapping(value = "/{id}/update")
+    @PostMapping("/{id}/update")
     public String update(@Validated Report report, BindingResult res, Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report",report);
 
-        System.out.println("ooetewe");
+        System.out.println("kakunin1");
 
         if (res.hasErrors()) {
-
-            System.out.println("ooetewe34");
-
-            // エラーあり
-            id = null; // idにnullを設定 //
+            System.out.println("kakunin2");
+            // id = null; // idにnullを設定 //
             return "reports/update"; // return getUser(code, model);から書き換え
         }
         // 日報更新情報登録

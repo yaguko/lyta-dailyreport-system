@@ -84,12 +84,32 @@ public class ReportService {
         return report;
     }
 
-    /** 日報の登録を行なう */
+    /** 日報の更新を行なう */
+    @Transactional
+    public ErrorKinds saveReport(Report report) {
+        // 日付重複チェック
+        if (findByReportDate(report.getReportDate()) != null) {
+            return ErrorKinds.DUPLICATE_ERROR;
+        }
+
+        report.setDeleteFlg(false);
+
+        LocalDateTime now = LocalDateTime.now();
+        // report.setCreatedAt(now);
+        report.setUpdatedAt(now);
+
+        reportRepository.save(report);
+        return ErrorKinds.SUCCESS;
+    }
+}
+
+
+
+
+    /** 日報の更新を行なう ・修正前
     @Transactional
     public Report saveReport(Report report) {
         return reportRepository.save(report);
-    }
+    }　　*/
 
 
-
-}
