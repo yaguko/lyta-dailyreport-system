@@ -69,7 +69,6 @@ public class ReportController {
 
         // 入力チェック
         if (res.hasErrors()) {
-            System.out.println("ooete");
             System.out.println(report.getReportDate());
             return create(report, userDetail, model);
         }
@@ -80,16 +79,13 @@ public class ReportController {
             ErrorKinds result = reportService.save(report);
 
             if (ErrorMessage.contains(result)) {
-                System.out.println("ooete2");
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
                 return create(report, userDetail, model);
             }
 
         } catch (DataIntegrityViolationException e) {
-            System.out.println("ooete3");
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            System.out.println("ooete4");
             return create(report, userDetail, model);
         }
 
@@ -114,7 +110,7 @@ public class ReportController {
 
     // <追記>日報更新画面の表示
     @GetMapping(value = "/{id}/update")
-    public String update(@PathVariable("id") Integer id, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String update(@PathVariable("id") Integer id, Report report, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
      //           ↑getUserから書き換え
         // Modelに登録,idがnullか否かをifで分ける
         if (id == null) {
@@ -129,12 +125,10 @@ public class ReportController {
     }
 
     // <追記２>日報更新処理
-    @PostMapping("/{id}/update")
-    public String update(@Validated Report report, BindingResult res, Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
+    @PostMapping(value = "/{id}/update")
+    public String update(@Validated Report report, LocalDate reportDate, BindingResult res, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report",report);
-
-        System.out.println("kakunin1");
 
         if (res.hasErrors()) {
             System.out.println("kakunin2");

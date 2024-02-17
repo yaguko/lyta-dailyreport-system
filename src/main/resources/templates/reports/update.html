@@ -17,7 +17,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <form th:action="@{/reports/{id}/update}" th:object="${report}" th:method="post">
+                            <form th:action="@{/reports/{id}/update(id=${report.id})}" th:object="${report}" th:method="post">
                             <div class="wizard wizard-success mb-4">
                             <div class="mb-3">
                                <label class="form-label" for="reportDate">日付</label>
