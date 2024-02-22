@@ -76,7 +76,7 @@ public class ReportController {
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
-            ErrorKinds result = reportService.save(report);
+            ErrorKinds result = reportService.save(report, userDetail); // 元はsave(report);
 
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
@@ -140,7 +140,7 @@ public class ReportController {
         newReport.setReportDate(report.getReportDate());
         newReport.setTitle(report.getTitle());
         newReport.setContent(report.getContent());
-        reportService.save(newReport);
+        reportService.save(newReport, userDetail); //保存　元はsave(newReport)
         // 一覧画面にリダイレクト
         return "redirect:/reports"; // 更新→一覧への遷移
     }
