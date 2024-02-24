@@ -137,11 +137,11 @@ public class ReportController {
             return "reports/update"; // return getUser(code, model);から書き換え
         }
         // 日報更新情報登録
-        Report newReport = reportService.findById(id);
-        newReport.setReportDate(report.getReportDate());
-        newReport.setTitle(report.getTitle());
-        newReport.setContent(report.getContent());
-        reportService.saveReport(newReport, userDetail); //保存　元はsave(newReport)
+        //Report newReport = reportService.findById(id);
+        //newReport.setReportDate(report.getReportDate());
+        //newReport.setTitle(report.getTitle());
+        //newReport.setContent(report.getContent());
+        reportService.saveReport(report, userDetail); //保存　元はsave(newReport)
         // 一覧画面にリダイレクト
         return "redirect:/reports"; // 更新→一覧への遷移
     }

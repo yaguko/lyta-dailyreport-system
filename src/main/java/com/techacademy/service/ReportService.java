@@ -97,7 +97,8 @@ public class ReportService {
         Report oldReport = findById(report.getId());
         System.out.println("その１");
 
-        if (report.getReportDate().isEqual(oldReport.getReportDate())) {
+      // if (report.getReportDate().isEqual(oldReport.getReportDate())) {
+            if (report.getReportDate().toString().equals(oldReport.getReportDate().toString())) {
             System.out.println("その２");
         } else {
             // 次の処理。id/日付重複チェック
