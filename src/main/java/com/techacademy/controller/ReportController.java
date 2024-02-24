@@ -127,6 +127,7 @@ public class ReportController {
     // <追記２>日報更新処理
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Report report, LocalDate reportDate, BindingResult res, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
+        //// 2月23日追記
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report",report);
 
@@ -140,7 +141,7 @@ public class ReportController {
         newReport.setReportDate(report.getReportDate());
         newReport.setTitle(report.getTitle());
         newReport.setContent(report.getContent());
-        reportService.save(newReport, userDetail); //保存　元はsave(newReport)
+        reportService.saveReport(newReport, userDetail); //保存　元はsave(newReport)
         // 一覧画面にリダイレクト
         return "redirect:/reports"; // 更新→一覧への遷移
     }
