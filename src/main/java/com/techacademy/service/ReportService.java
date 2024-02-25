@@ -96,28 +96,28 @@ public class ReportService {
         // 新しく登録する日付けが別のデータを保存している日付け。NGの可能性。他にあるか要チェック
         Report oldReport = findById(report.getId());
         System.out.println("その１");
-
-      // if (report.getReportDate().isEqual(oldReport.getReportDate())) {
+        
             if (report.getReportDate().toString().equals(oldReport.getReportDate().toString())) {
             System.out.println("その２");
         } else {
             // 次の処理。id/日付重複チェック
             List<Report> reportList = reportRepository.findByEmployeeAndReportDate(userDetail.getEmployee(),
-                    report.getReportDate()); // 自分のログインした情報だけの従業員情報を取得 //この処理が走ってない
+                    report.getReportDate());
             System.out.println("その３" + reportList.size());
             if ((reportList.size() != 0)) { // idが同じ かつ 同じ日がある。 同じ日付がある場合はエラー ※表示されている日は例外でOKはifで処理
                 return ErrorKinds.DUPLICATE_ERROR;
             }
         }
 
+            System.out.println("その４");
         report.setDeleteFlg(false);
 
         LocalDateTime now = LocalDateTime.now();
         // report.setCreatedAt(now);
         report.setUpdatedAt(now);
 
-        reportRepository.save(report);
-
+        System.out.println("その５");
+        reportRepository.save(report);  ///ここが変？
         return ErrorKinds.SUCCESS;
 
     }

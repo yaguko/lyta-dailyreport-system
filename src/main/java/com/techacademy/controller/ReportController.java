@@ -128,13 +128,27 @@ public class ReportController {
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Report report, LocalDate reportDate, BindingResult res, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
         //// 2月23日追記
+        System.out.println("kakunin1");
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report",report);
 
         if (res.hasErrors()) {
-            System.out.println("kakunin2");
-            // id = null; // idにnullを設定 //
-            return "reports/update"; // return getUser(code, model);から書き換え
+           //System.out.println("kakunin2");
+           ErrorKinds result = reportService.saveReport(report, userDetail);
+
+           if (ErrorMessage.contains(result)) {
+               model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+               return update(id, report, reportDate, userDetail, model);
+           }
+
+
+          System.out.println(report.getReportDate());
+          return update(id, report, reportDate, userDetail, model);
+
+         //  id = null; // idにnullを設定 //
+         //  return "reports/update"; // return getUser(code, model);から書き換え
+
+
         }
         // 日報更新情報登録
         //Report newReport = reportService.findById(id);
