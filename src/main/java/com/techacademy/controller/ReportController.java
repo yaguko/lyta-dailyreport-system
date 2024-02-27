@@ -67,6 +67,14 @@ public class ReportController {
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report",report);
 
+        //日付重複チェック
+        if ("report".equals(report.getReportDate())) {
+        model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+                ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+        return create(report, userDetail, model);
+        }
+
+
         // 入力チェック
         if (res.hasErrors()) {
             System.out.println(report.getReportDate());
@@ -84,13 +92,14 @@ public class ReportController {
             }
 
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),   // 重複チェックエラー(例外あり)
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));   // 重複チェックエラー(例外あり)
             return create(report, userDetail, model);
         }
 
         System.out.println("ooete5");
         return "redirect:/reports";
+
     }
 
     // 日報削除処理
@@ -135,20 +144,25 @@ public class ReportController {
         if (res.hasErrors()) {
            //System.out.println("kakunin2");
            ErrorKinds result = reportService.saveReport(report, userDetail);
+        }
+
+           try {
+               ErrorKinds result = reportService.saveReport(report, userDetail);
 
            if (ErrorMessage.contains(result)) {
                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
                return update(id, report, reportDate, userDetail, model);
            }
 
+           } catch (DataIntegrityViolationException e) {
+               model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                       ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
 
-          System.out.println(report.getReportDate());
+               System.out.println(report.getReportDate());
           return update(id, report, reportDate, userDetail, model);
 
          //  id = null; // idにnullを設定 //
          //  return "reports/update"; // return getUser(code, model);から書き換え
-
-
         }
         // 日報更新情報登録
         //Report newReport = reportService.findById(id);

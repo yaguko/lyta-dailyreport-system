@@ -96,7 +96,7 @@ public class ReportService {
         // 新しく登録する日付けが別のデータを保存している日付け。NGの可能性。他にあるか要チェック
         Report oldReport = findById(report.getId());
         System.out.println("その１");
-        
+
             if (report.getReportDate().toString().equals(oldReport.getReportDate().toString())) {
             System.out.println("その２");
         } else {
@@ -113,7 +113,7 @@ public class ReportService {
         report.setDeleteFlg(false);
 
         LocalDateTime now = LocalDateTime.now();
-        // report.setCreatedAt(now);
+        report.setCreatedAt(now); //古い情報のCreatedAtをもう一度セットする方法がある　①えんぷろいーで同じようにやったのを参照に。　②アノテーションでCreatedAt　UpdatedAtを自動で設定するのがある
         report.setUpdatedAt(now);
 
         System.out.println("その５");
