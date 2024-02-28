@@ -113,7 +113,7 @@ public class ReportService {
         report.setDeleteFlg(false);
 
         LocalDateTime now = LocalDateTime.now();
-        report.setCreatedAt(now); //古い情報のCreatedAtをもう一度セットする方法がある　①えんぷろいーで同じようにやったのを参照に。　②アノテーションでCreatedAt　UpdatedAtを自動で設定するのがある
+        report.setCreatedAt(oldReport.getCreatedAt()); //古い情報のCreatedAtをもう一度セットする方法がある　①えんぷろいーで同じようにやったのを参照に。　②アノテーションでCreatedAt　UpdatedAtを自動で設定するのがある
         report.setUpdatedAt(now);
 
         System.out.println("その５");

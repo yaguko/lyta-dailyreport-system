@@ -52,28 +52,28 @@ public class ReportController {
     // 日報新規登録画面
     @GetMapping(value = "/add")
     public String create(Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-    // report=new Report(); //
-    report.setEmployee(userDetail.getEmployee());
-    model.addAttribute("report",report);
+        // report=new Report(); //
+        report.setEmployee(userDetail.getEmployee());
+        model.addAttribute("report", report);
 
         return "reports/new";
-        }
-
+    }
 
     // 日報新規登録処理
     @PostMapping(value = "/add")
-    public String add(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String add(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
+            Model model) {
 
         report.setEmployee(userDetail.getEmployee());
-        model.addAttribute("report",report);
+        model.addAttribute("report", report);
 
-        //日付重複チェック
-        if ("report".equals(report.getReportDate())) {
-        model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
-                ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
-        return create(report, userDetail, model);
+        // 日付重複チェック ★ココを用確認
+        if ("reportDate".equals(report.getReportDate())) {
+            // 登録しようとしている日付けがすでにある場合
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+            return create(report, userDetail, model);
         }
-
 
         // 入力チェック
         if (res.hasErrors()) {
@@ -92,8 +92,8 @@ public class ReportController {
             }
 
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),   // 重複チェックエラー(例外あり)
-                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));   // 重複チェックエラー(例外あり)
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR), // 重複チェックエラー(例外あり)
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR)); // 重複チェックエラー(例外あり)
             return create(report, userDetail, model);
         }
 
@@ -119,8 +119,9 @@ public class ReportController {
 
     // <追記>日報更新画面の表示
     @GetMapping(value = "/{id}/update")
-    public String update(@PathVariable("id") Integer id, Report report, LocalDate reportDate, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-     //           ↑getUserから書き換え
+    public String update(@PathVariable("id") Integer id, Report report, LocalDate reportDate,
+            @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        // ↑getUserから書き換え
         // Modelに登録,idがnullか否かをifで分ける
         if (id == null) {
             model.addAttribute("report");
@@ -135,41 +136,42 @@ public class ReportController {
 
     // <追記２>日報更新処理
     @PostMapping(value = "/{id}/update")
-    public String update(@Validated Report report, LocalDate reportDate, BindingResult res, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
+    public String update(@Validated Report report, LocalDate reportDate, BindingResult res,
+            @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) { // 引数idを追加
         //// 2月23日追記
         System.out.println("kakunin1");
         report.setEmployee(userDetail.getEmployee());
-        model.addAttribute("report",report);
+        model.addAttribute("report", report);
 
         if (res.hasErrors()) {
-           //System.out.println("kakunin2");
-           ErrorKinds result = reportService.saveReport(report, userDetail);
+            // System.out.println("kakunin2");
+            ErrorKinds result = reportService.saveReport(report, userDetail);
         }
 
-           try {
-               ErrorKinds result = reportService.saveReport(report, userDetail);
+        try {
+            ErrorKinds result = reportService.saveReport(report, userDetail);
 
-           if (ErrorMessage.contains(result)) {
-               model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-               return update(id, report, reportDate, userDetail, model);
-           }
+            if (ErrorMessage.contains(result)) {
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return update(id, report, reportDate, userDetail, model);
+            }
 
-           } catch (DataIntegrityViolationException e) {
-               model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                       ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
 
-               System.out.println(report.getReportDate());
-          return update(id, report, reportDate, userDetail, model);
+            System.out.println(report.getReportDate());
+            return update(id, report, reportDate, userDetail, model);
 
-         //  id = null; // idにnullを設定 //
-         //  return "reports/update"; // return getUser(code, model);から書き換え
+            // id = null; // idにnullを設定 //
+            // return "reports/update"; // return getUser(code, model);から書き換え
         }
         // 日報更新情報登録
-        //Report newReport = reportService.findById(id);
-        //newReport.setReportDate(report.getReportDate());
-        //newReport.setTitle(report.getTitle());
-        //newReport.setContent(report.getContent());
-        reportService.saveReport(report, userDetail); //保存　元はsave(newReport)
+        // Report newReport = reportService.findById(id);
+        // newReport.setReportDate(report.getReportDate());
+        // newReport.setTitle(report.getTitle());
+        // newReport.setContent(report.getContent());
+        reportService.saveReport(report, userDetail); // 保存 元はsave(newReport)
         // 一覧画面にリダイレクト
         return "redirect:/reports"; // 更新→一覧への遷移
     }
