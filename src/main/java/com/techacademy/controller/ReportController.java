@@ -143,6 +143,14 @@ public class ReportController {
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report", report);
 
+     // 日付重複チェック ★ココを用確認
+        if ("reportDate".equals(report.getReportDate())) {
+            // 登録しようとしている日付けがすでにある場合
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+            return update(id, report, reportDate, userDetail, model);
+        }
+
         if (res.hasErrors()) {
             // System.out.println("kakunin2");
             ErrorKinds result = reportService.saveReport(report, userDetail);
