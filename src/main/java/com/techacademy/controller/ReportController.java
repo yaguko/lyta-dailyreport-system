@@ -68,12 +68,12 @@ public class ReportController {
         model.addAttribute("report", report);
 
         // 日付重複チェック ★ココを用確認
-        if ("reportDate".equals(report.getReportDate())) {
-            // 登録しようとしている日付けがすでにある場合
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
-            return create(report, userDetail, model);
-        }
+     //   if ("reportDate".equals(report.getReportDate())) {
+       //     // 登録しようとしている日付けがすでにある場合
+       //     model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+       //             ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+     //       return create(report, userDetail, model);
+     //   }
 
         // 入力チェック
         if (res.hasErrors()) {
@@ -144,12 +144,12 @@ public class ReportController {
         model.addAttribute("report", report);
 
      // 日付重複チェック ★ココを用確認
-        if ("reportDate".equals(report.getReportDate())) {
+      //  if ("LocalDate".equals(report.getReportDate())) { //localDate型に
             // 登録しようとしている日付けがすでにある場合
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
-            return update(id, report, reportDate, userDetail, model);
-        }
+        //    model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+          //          ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+          // update(id, report, reportDate, userDetail, model);
+     //   }
 
         if (res.hasErrors()) {
             // System.out.println("kakunin2");
@@ -160,14 +160,14 @@ public class ReportController {
             ErrorKinds result = reportService.saveReport(report, userDetail);
 
             if (ErrorMessage.contains(result)) {
+                System.out.println("Error name=" + ErrorMessage.getErrorName(result) + "[" +ErrorMessage.getErrorValue(result)+ "]");
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return update(id, report, reportDate, userDetail, model);
+                return update(null, report, reportDate, userDetail, model);
             }
 
         } catch (DataIntegrityViolationException e) {
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-
             System.out.println(report.getReportDate());
             return update(id, report, reportDate, userDetail, model);
 
