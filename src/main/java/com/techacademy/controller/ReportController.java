@@ -2,6 +2,7 @@ package com.techacademy.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,7 +43,10 @@ public class ReportController {
         model.addAttribute("reportList", reportService.findAll()); // 管理者の場合、全件取得
         } else {
             report.setEmployee(userDetail.getEmployee()); //自身の日報のみ取得
+            model.addAttribute("listSize", reportService.findByEmployee(emp).size());
             model.addAttribute("report", report);
+
+            // model.addAttribute("reportList", report.getReportDate()); //
         }
 
         return "reports/list";

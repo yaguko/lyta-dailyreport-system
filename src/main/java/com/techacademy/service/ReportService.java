@@ -40,7 +40,8 @@ public class ReportService {
 
         // 日付重複チェック
         List<Report> reportList = reportRepository.findByEmployeeAndReportDate(userDetail.getEmployee(),
-                report.getReportDate()); // 自分のログインした情報だけの従業員情報を取得　findByEmployeeAndReportDate(Employee employee, LocalDate reportdate);
+                report.getReportDate()); // 自分のログインした情報だけの従業員情報を取得 findByEmployeeAndReportDate(Employee employee,
+                                         // LocalDate reportdate);
         if (reportList.size() != 0) { // 日付が同じだった場合エラー sizeは件数を取得する
             return ErrorKinds.DATECHECK_ERROR; // ←DATECHECK_ERROR？「すでに登録された日付」と出したい。
         }
@@ -80,6 +81,11 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
+    // ★追記3/3★
+    public List<Report> findByEmployee(Employee emp) { // 自分の従業員情報をとってくる土台
+        return reportRepository.findByEmployee(emp);
+       }
+
     // 1件を検索
     public Report findById(Integer id) {
         // findByIdで検索
@@ -97,7 +103,7 @@ public class ReportService {
         Report oldReport = findById(report.getId());
         System.out.println("その１");
 
-            if (report.getReportDate().toString().equals(oldReport.getReportDate().toString())) {
+        if (report.getReportDate().toString().equals(oldReport.getReportDate().toString())) {
             System.out.println("その２");
         } else {
             // 次の処理。id/日付重複チェック
@@ -109,15 +115,16 @@ public class ReportService {
             }
         }
 
-            System.out.println("その４");
+        System.out.println("その４");
         report.setDeleteFlg(false);
 
         LocalDateTime now = LocalDateTime.now();
-        report.setCreatedAt(oldReport.getCreatedAt()); //古い情報のCreatedAtをもう一度セットする方法がある　①えんぷろいーで同じようにやったのを参照に。　②アノテーションでCreatedAt　UpdatedAtを自動で設定するのがある
+        report.setCreatedAt(oldReport.getCreatedAt()); // 古い情報のCreatedAtをもう一度セットする方法がある ①えんぷろいーで同じようにやったのを参照に。
+                                                       // ②アノテーションでCreatedAt UpdatedAtを自動で設定するのがある
         report.setUpdatedAt(now);
 
         System.out.println("その５");
-        reportRepository.save(report);  ///ここが変？
+        reportRepository.save(report); /// ここが変？
         return ErrorKinds.SUCCESS;
 
     }
