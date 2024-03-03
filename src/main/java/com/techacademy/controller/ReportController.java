@@ -1,6 +1,7 @@
 package com.techacademy.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
@@ -33,10 +35,15 @@ public class ReportController {
 
     // 一覧画面
     @GetMapping
-    public String list(Model model) {
-
+    public String list(Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Employee emp = userDetail.getEmployee(); // ログインユーザーのEmployeeを取得
+        if(Employee.Role.ADMIN == emp.getRole())  { // ログインユーザーのRoleが管理者か？
         model.addAttribute("listSize", reportService.findAll().size());
-        model.addAttribute("reportList", reportService.findAll());
+        model.addAttribute("reportList", reportService.findAll()); // 管理者の場合、全件取得
+        } else {
+            report.setEmployee(userDetail.getEmployee()); //自身の日報のみ取得
+            model.addAttribute("report", report);
+        }
 
         return "reports/list";
     }
@@ -63,7 +70,6 @@ public class ReportController {
     @PostMapping(value = "/add")
     public String add(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
             Model model) {
-
         report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report", report);
 
