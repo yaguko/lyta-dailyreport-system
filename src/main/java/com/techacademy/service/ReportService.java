@@ -42,7 +42,7 @@ public class ReportService {
         List<Report> reportList = reportRepository.findByEmployeeAndReportDate(userDetail.getEmployee(),
                 report.getReportDate()); // 自分のログインした情報だけの従業員情報を取得　findByEmployeeAndReportDate(Employee employee, LocalDate reportdate);
         if (reportList.size() != 0) { // 日付が同じだった場合エラー sizeは件数を取得する
-            return ErrorKinds.DUPLICATE_ERROR; // ←DATECHECK_ERROR？「すでに登録された日付」と出したい。
+            return ErrorKinds.DATECHECK_ERROR; // ←DATECHECK_ERROR？「すでに登録された日付」と出したい。
         }
 
         report.setDeleteFlg(false);
