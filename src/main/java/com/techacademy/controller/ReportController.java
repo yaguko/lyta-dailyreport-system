@@ -44,7 +44,7 @@ public class ReportController {
         } else {
             report.setEmployee(userDetail.getEmployee()); //自身の日報のみ取得
             model.addAttribute("listSize", reportService.findByEmployee(emp).size());
-            model.addAttribute("report", report);
+            model.addAttribute("reportList", reportService.findByEmployee(emp));
 
             // model.addAttribute("reportList", report.getReportDate()); //
         }
