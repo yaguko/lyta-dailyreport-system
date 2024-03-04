@@ -36,14 +36,14 @@
                                             <p class="mb-1"></p>
                                             <div class="col-md-7">
                                                 <input type="text" th:field="*{title}" th:errorclass="err">
-                                                <span th:errors="*{title}" class="err"></span>
+                                                <span th:errors="*{title}" class="text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label" for="content">内容</label>
                                                 <p class="mb-1"></p>
                                                 <div class="col-md-7">
                                                     <textarea th:field="*{content}" th:errorclass="err" cols="50" rows="5"></textarea>
-                                                    <span th:errors="*{content}" class="err"></span>
+                                                    <span th:errors="*{content}" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>

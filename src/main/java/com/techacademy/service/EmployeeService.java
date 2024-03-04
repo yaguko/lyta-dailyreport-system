@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
 
 @Service
@@ -71,7 +72,7 @@ public class EmployeeService {
 
         /* 削除対象の従業員に紐づいている日報情報の削除：ここから */
 
-        /* ReportService reportservice = new ReportService();　←不要？
+        // ReportService reportservice = new ReportService();　←不要？
 
         // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
         List<Report> reportList = reportService.findByEmployee(employee);
@@ -79,7 +80,7 @@ public class EmployeeService {
         // 日報のリスト（reportList）を拡張for文を使って繰り返し
         for (Report report : reportList) {
             // 日報（report）のIDを指定して、日報情報を削除
-            reportService.delete(report.getId());
+            reportService.delete(report.getId(), userDetail);
         }
 
         /* 削除対象の従業員に紐づいている日報情報の削除：ここまで */
